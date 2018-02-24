@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { baseUrl } from './../config.js';
 import "./AddEquityForm.css";
 
 export class AddEquityForm extends Component {
@@ -6,6 +7,20 @@ export class AddEquityForm extends Component {
   constructor(props) {
     super(props);
     this.submit = this.submit.bind(this);
+  }
+  postEquity = (equity) => {
+    console.log('POST: ', equity);
+    fetch(baseUrl + '/addequity', { 
+      method: 'POST', 
+      headers: { 
+        'Accept': 'application/json', 
+        'Content-Type': 'application/json' 
+      }, 
+      body: JSON.stringify(equity) 
+    })
+      .then(response => { if (response.status === 404) console.log('404 Error'); })
+      // .then(() => this.props.fetchTrades())
+    // this.props.fetchTopics();
   }
 
   submit = (e) => {
@@ -15,7 +30,17 @@ export class AddEquityForm extends Component {
     console.log('large', this.refs.large.checked);
     console.log('medium', this.refs.medium.checked);
     console.log('small', this.refs.small.checked);
-
+    let size = '';
+    if (this.refs.large.checked) size = 'large';
+    else if (this.refs.medium.checked) size = 'medium';
+    else if (this.refs.small.checked) size = 'small';
+    const equity = {
+      name: this.refs.name.value,
+      ticker: this.refs.ticker.value,
+      size: size
+    };
+    console.log('Equity', equity);
+    this.postEquity(equity);
   }
 
   render() {
@@ -23,7 +48,7 @@ export class AddEquityForm extends Component {
       <form onSubmit={this.submit} className="add-equity-form">
         <fieldset>
           <legend>Add Equity</legend>
-          <div>
+          <div id="equity-name-input">
             <label htmlFor="name">Name:</label>
             <input 
               id="name"
@@ -33,7 +58,7 @@ export class AddEquityForm extends Component {
               ref="name"
               />
           </div>
-          <div>
+          <div id="ticker-input">
             <label htmlFor="ticker">Ticker:</label>
             <input id="ticker"
               type="text"
@@ -41,7 +66,7 @@ export class AddEquityForm extends Component {
               defaultValue="SWMA"
               required />
           </div>
-          <div className="select-size">
+          <div className="select-size-input">
             <div>
               <input 
                 name="size"
@@ -73,7 +98,6 @@ export class AddEquityForm extends Component {
           </div>
           <button>Add Equity</button>
         </fieldset>
-
       </form>
     )
   }

@@ -5,6 +5,7 @@ import './App.css';
 import { slide as Menu } from 'react-burger-menu'
 import { Route, Link } from 'react-router-dom';
 import { AddEquityForm } from './components/AddEquityForm';
+import AddTrade from './components/AddTrade';
 import Draggable from 'react-draggable'; // Both at the same time
  
 class App extends Component {
@@ -23,6 +24,7 @@ class App extends Component {
         </Menu>
         <nav>
             <Link to="/addEquityForm">Add Equity</Link>
+            <Link to="/addtrade">Add Trade</Link>
             {/* <Link to="/Home">Home</Link> */}
 
           </nav>
@@ -30,11 +32,10 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to Poise Trade Station</h1>
         </header>
-        <Draggable>
         <div>
           <Route path="/addEquityForm" component={AddEquityForm} />
+          <Route path="/addTrade" component={AddTrade} />
         </div>
-        </Draggable>
           {/* <Route path="/Home" component={App} /> */}
 
 
