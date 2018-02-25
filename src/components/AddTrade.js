@@ -19,7 +19,7 @@ class AddTrade extends Component {
 
   postTrade = (trade) => {
     console.log('POST: ', trade);
-    fetch(baseUrl + '/addtrade', { 
+    fetch(baseUrl + '/trades', { 
       method: 'POST', 
       headers: { 
         'Accept': 'application/json', 

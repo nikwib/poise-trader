@@ -3,6 +3,8 @@
   flex-wrap: wrap;
   justify-content: flex-start;
   margin: 1vw;
+  background-color: #92B5BE;
+
 }
 .add-trade-input {
   display: flex;
@@ -19,20 +21,21 @@ input {
 
 button {
   color: white;
-  background-color: rgb(158, 153, 153);
-  margin: 5px;
-  padding: 5px 10px;
+  background-color: #00515C; /* Green */
+  margin: 1vw;
+  padding: 1vw 1vw;
   border: 0;
 
 }
 
 button:hover {
-  color: rgb(75, 71, 71);
+  color: white;
+  background-color: rgba(0, 81, 92, 0.822);
 }
 
 button:active {
   background-color: white;
-  color: black;
+  color: #00515C;
   outline: 1px solid black;
 
 }

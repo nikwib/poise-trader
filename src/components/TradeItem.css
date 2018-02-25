@@ -1,0 +1,8 @@
+  .trade-item {
+    display: flex;
+    width: 90%;
+    justify-content: space-between;
+    margin: 20 vw;
+    border: 5 vw solid grey;
+    padding: 3 vw;
+  }
