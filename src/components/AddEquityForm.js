@@ -46,7 +46,7 @@ export class AddEquityForm extends Component {
   render() {
     return (
       <form onSubmit={this.submit} className="add-equity-form">
-        <fieldset>
+        <fieldset className="field">
           <legend>Add Equity</legend>
           <div id="equity-name-input">
             <label htmlFor="name">Name:</label>

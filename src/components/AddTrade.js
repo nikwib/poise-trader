@@ -65,7 +65,7 @@ class AddTrade extends Component {
               ref="equity"
               />
           </div>
-          <div className="add-trade-input">
+          <div className="add-trade-input quantity">
             <label htmlFor="quantity">Quantity:</label>
             <input 
               id="quantity"
@@ -75,8 +75,8 @@ class AddTrade extends Component {
               ref="quantity"
               />
           </div>
-          <div className="add-trade-input">
-            <label htmlFor="entryPrice">Entry Price:</label>
+          <div className="add-trade-input price">
+            <label htmlFor="entryPrice">Entry-Price:</label>
             <input 
               id="entryPrice"
               type="text"
@@ -105,8 +105,8 @@ class AddTrade extends Component {
               ref="strategies"
               />
           </div>
-          <div className="add-trade-input">
-            <label htmlFor="exitPrice">Exit Price:</label>
+          <div className="add-trade-input price">
+            <label htmlFor="exitPrice">Exit-Price:</label>
             <input 
               id="exitPrice"
               type="text"
