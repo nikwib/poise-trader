@@ -1,0 +1,48 @@
+.add-card-form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin: 1vw;
+  box-shadow: 5px 5px 2px 0px rgba(0,0,0,0.1);
+  padding: 1vw;
+  background-color: #92B5BE;
+
+}
+.add-card-input {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+input {
+  border-radius: 1%;
+  margin: 1vw;
+  padding: 0.5vw;
+}
+.quantity {
+  width: 5vw;
+}
+.price {
+  width: 7vw;
+}
+
+button {
+  color: white;
+  background-color: #00515C; /* Green */
+  margin: 1vw;
+  padding: 1vw 1vw;
+  border: 0;
+
+}
+
+button:hover {
+  color: white;
+  background-color: rgba(0, 81, 92, 0.822);
+}
+
+button:active {
+  background-color: white;
+  color: #00515C;
+  outline: 1px solid black;
+
+}

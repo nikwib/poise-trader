@@ -4,36 +4,23 @@ import ReactDOM from 'react-dom';
 import './index.css';
  import App from './App';
 import registerServiceWorker from './registerServiceWorker';
-//  import { BrowserRouter, Route, Link } from 'react-router-dom';
- import { BrowserRouter } from 'react-router-dom';
-// import { AddEquityForm } from './components/AddEquityForm';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+import reducers from './reducers';
+
 injectTapEventPlugin();
 
-// const App2 = () => (
-//   <div>
-//     <nav>
-//       <Link to="/addEquityForm">Add Equity</Link>
-//     </nav>
-//     <div>
-//       <Route path="/addEquityForm" component={AddEquityForm}/>
-//     </div>
-//   </div>
-// )
+let store = createStore(reducers, window.__REDUX_DEVTOOLS_EXTENSION__ &&
+  window.__REDUX_DEVTOOLS_EXTENSION__());
 
-// const Dashboard = () => (
-//   <div>
-//     <h1>Hello from Dashboard</h1>
-//   </div>
-// )
-
-
-ReactDOM.render(
-  <BrowserRouter>
-    <App/>
-  </BrowserRouter>,
-  document.getElementById('root')
-);
+  ReactDOM.render(
+    <Provider store={store}>
+      <App />
+    </Provider>,
+    document.getElementById('root')
+  );
+  
 registerServiceWorker();
