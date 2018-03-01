@@ -1,0 +1,6 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  background-color: #92B5BE;
+  box-shadow: 5px 5px 2px 0px rgba(0,0,0,0.1);
+}

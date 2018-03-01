@@ -22,19 +22,25 @@ class Board extends Component {
 
   render() {
     return (
-      <div className="Board">
-        Setup: <List
-          key={'setup'}
-          cards={this.props.cards.filter(card => card.status === 'setup')}
-        />
-        Active: <List
-          key={'active'}
-          cards={this.props.cards.filter(card => card.status === 'active')}
-        />
-        Sold: <List
-          key={'sold'}
-          cards={this.props.cards.filter(card => card.status === 'sold')}
-        />
+      <div className="board">
+        <div>
+          Setup: <List
+            key={'setup'}
+            cards={this.props.cards.filter(card => card.status === 'setup')}
+          />
+        </div>
+        <div>
+          Active: <List
+            key={'active'}
+            cards={this.props.cards.filter(card => card.status === 'active')}
+          />
+        </div>
+        <div>
+          Sold: <List
+            key={'sold'}
+            cards={this.props.cards.filter(card => card.status === 'sold')}
+          />
+        </div>
       </div>
     );
   }

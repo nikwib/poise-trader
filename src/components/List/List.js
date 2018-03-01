@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card } from '../Card/Card';
-
+import './List.css';
 const renderList = (props) => props.cards.map(card => {
   return (
     <Card
@@ -13,7 +13,7 @@ const renderList = (props) => props.cards.map(card => {
   
 export const List = (props) => {
   return (
-    <div>      
+    <div className='list'>      
       {renderList(props)}
     </div>
   )

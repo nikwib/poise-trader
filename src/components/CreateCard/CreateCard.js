@@ -1,21 +1,28 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { storeCard } from './../../actions'
 import { baseUrl } from './../../config';
 import "./CreateCard.css";
 
+const camelCase = (str) => {
+  str = str[0].toLowerCase() + str.substr(1)
+  return str.replace(' ', '');
+}
+
+const input = (title, defaultValue="0", additionalClassNames) => (
+  <div className={`add-card-input ${additionalClassNames}`}>
+    <label htmlFor={camelCase(title)}>{title}:</label>
+    <input
+      id={camelCase(title)}
+      type="text"
+      required
+      defaultValue={defaultValue}
+      ref={camelCase(title)}
+    />
+  </div>
+)
 
 class CreateCard extends Component {
-  myState = {
-    equity: 'Poise AB',
-    quantity: 0,
-    entryPrice: 0,
-    entryDate: '2000-01-01',
-    strategies: '',
-    exitPrice: 0,
-    exitDate: '2000-01-02',
-    ATR: 0,
-    notes: '',
-    status: 'setup',
-  }
 
   postCard = (card) => {
     console.log('POST: ', card);
@@ -27,9 +34,14 @@ class CreateCard extends Component {
       },
       body: JSON.stringify(card)
     })
-      .then(response => { if (response.status === 404) console.log('404 Error'); })
+      .then(response => response.json())
+      .then(response => {
+        this.props.storeCard(response);
+        console.log('Response after post: ',response);
+      })
+      .catch(err => console.log('Error: ', err));
+      // .then(response => { if (response.status === 404) console.log('404 Error'); })
 
-    // .then(() => this.props.fetchTrades())
     // this.props.fetchTopics();
   }
 
@@ -43,7 +55,7 @@ class CreateCard extends Component {
       strategies: this.refs.strategies.value,
       exitPrice: this.refs.exitPrice.value,
       exitDate: this.refs.exitDate.value,
-      ATR: this.refs.ATR.value,
+      ATR: this.refs.atr.value,
       notes: this.refs.notes.value,
       status: this.refs.status.value,
     };
@@ -57,106 +69,16 @@ class CreateCard extends Component {
       <form onSubmit={this.submit} className="add-card-form">
         {/* <fieldset> */}
         {/* <legend>Add card</legend> */}
-        <div className="add-card-input">
-          <label htmlFor="equity">Equity:</label>
-          <input
-            id="equity"
-            type="text"
-            required
-            defaultValue="Swedish Match AB"
-            ref="equity"
-          />
-        </div>
-        <div className="add-card-input quantity">
-          <label htmlFor="quantity">Quantity:</label>
-          <input
-            id="quantity"
-            type="text"
-            required
-            defaultValue="0"
-            ref="quantity"
-          />
-        </div>
-        <div className="add-card-input price">
-          <label htmlFor="entryPrice">Entry-Price:</label>
-          <input
-            id="entryPrice"
-            type="text"
-            required
-            defaultValue="0"
-            ref="entryPrice"
-          />
-        </div>
-        <div className="add-card-input">
-          <label htmlFor="entryDate">Entry Date:</label>
-          <input
-            id="entryDate"
-            type="text"
-            required
-            defaultValue="2018-01-01"
-            ref="entryDate"
-          />
-        </div>
-        <div className="add-card-input">
-          <label htmlFor="strategies">Strategies:</label>
-          <input
-            id="strategies"
-            type="text"
-            required
-            defaultValue="0"
-            ref="strategies"
-          />
-        </div>
-        <div className="add-card-input price">
-          <label htmlFor="exitPrice">Exit-Price:</label>
-          <input
-            id="exitPrice"
-            type="text"
-            required
-            defaultValue="0"
-            ref="exitPrice"
-          />
-        </div>
-        <div className="add-card-input">
-          <label htmlFor="exitDate">Exit Date:</label>
-          <input
-            id="exitDate"
-            type="text"
-            required
-            defaultValue="2018-01-02"
-            ref="exitDate"
-          />
-        </div>
-        <div className="add-card-input">
-          <label htmlFor="ATR">ATR:</label>
-          <input
-            id="ATR"
-            type="text"
-            required
-            defaultValue="0"
-            ref="ATR"
-          />
-        </div>
-        <div className="add-card-input">
-          <label htmlFor="notes">Notes:</label>
-          <input
-            id="notes"
-            type="text"
-            required
-            defaultValue="0"
-            ref="notes"
-          />
-        </div>
-        <div className="add-card-input">
-          <label htmlFor="status">Status:</label>
-          <input
-            id="status"
-            type="text"
-            required
-            defaultValue="setup"
-            ref="status"
-          />
-        </div>
+        {input('Equity','Swedish Match AB')}
+        {input('Quantity', '0', 'quantity')}
+        {input('Entry Price', '0', 'price')}
+        {input('Entry Date', '2018-01-01', 'date')}
+        {input('Strategies', '0', 'strategies')}
+        {input('Exit Price', '0', 'price')}
+        {input('Exit Date', '2018-01-02', 'date')}
+        {input('atr', '3', 'atr')}
+        {input('Notes', '3', 'notes')}
+        {input('Status', 'setup', 'status')}
         <button>Add Equity</button>
         {/* </fieldset> */}
       </form>
@@ -165,5 +87,16 @@ class CreateCard extends Component {
   }
 }
 
+const mapStateToProps = (state) => ({
+  // Map your state to props
+  // cards: state.cards
+});
 
-export default CreateCard;
+const mapDispatchToProps = (dispatch) => ({
+  // Map your dispatch actions
+  storeCard: (card) => dispatch(storeCard(card)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreateCard);
+
+// export default CreateCard;
