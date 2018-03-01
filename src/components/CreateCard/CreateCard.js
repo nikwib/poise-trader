@@ -64,7 +64,7 @@ class CreateCard extends Component {
 
   render() {
 
-    console.log('myState: ', this.myState);
+    // console.log('myState: ', this.myState);
     return (
       <form onSubmit={this.submit} className="add-card-form">
         {/* <fieldset> */}
