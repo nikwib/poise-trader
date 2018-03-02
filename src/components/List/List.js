@@ -8,8 +8,6 @@ import './List.css';
 const listDropTarget = {
   drop: function (props, monitor) {
     const item = monitor.getItem();
-    console.log('item: ',item);
-    console.log('props: ',props);
     const data = {
       src: {
         card: item.props.card,
@@ -28,15 +26,15 @@ const listDropTarget = {
 function collect(connect, monitor) {
   return {
     connectDropTarget: connect.dropTarget(),
-  }
+  };
 }
 
 const renderList = (cards, onClickDelete) => cards.map(card => {
-  return ( <Card key={card._id}  card={card} onClickDelete={onClickDelete}/>);
+  return (<Card key={card._id} card={card} onClickDelete={onClickDelete} />);
 }
-)
+);
 
-const List = ({ cards, onClickDelete,  connectDropTarget }) => connectDropTarget(
+const List = ({ cards, onClickDelete, connectDropTarget }) => connectDropTarget(
   <div className='list'>
     {renderList(cards, onClickDelete)}
   </div>

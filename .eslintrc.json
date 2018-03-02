@@ -34,7 +34,7 @@
     ],
     "semi": "error",
     "space-before-blocks": "error",
-    "space-before-function-paren": "error",
+    "space-before-function-paren": "off",
     "no-undef": "off",
     "no-unused-vars": "off"
   }

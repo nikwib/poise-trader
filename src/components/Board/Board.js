@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// import { DragDropContext } from 'react-dnd';
-// import HTML5Backend from 'react-dnd-html5-backend';
 import { baseUrl } from './../../config';
 import { storeCards, swapCard } from './../../actions';
 import List from '../List/List';
@@ -10,7 +8,7 @@ import './Board.css';
 class Board extends Component {
 
 
-  fetchCards = () => {
+  fetchCards() {
     fetch(baseUrl + '/cards')
       .then(response => response.json())
       .then(cards => {
@@ -24,6 +22,31 @@ class Board extends Component {
       .then(this.fetchCards);
   }
 
+  reverseSwapCard(data, srcStatus) {
+    // Reverse redux store update
+    data.target.list = srcStatus;
+    this.props.swapCard(data);
+  }
+
+  swapCard = async (data) => {
+    const card = data.src.card;
+    const srcStatus = data.src.card.status;
+    card.status = data.target.list;
+    this.props.swapCard(data); // Optimistic update of redux store
+    try {
+      const response = await fetch((baseUrl + '/cards'), {
+        method: 'PUT',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(card)
+      });
+      // console.log(response);
+      if (response.status === 503) this.reverseSwapCard(data, srcStatus);
+    } catch (err) { this.reverseSwapCard(data, srcStatus) }
+  }
+
   componentDidMount() {
     this.fetchCards();
   }
@@ -35,7 +58,7 @@ class Board extends Component {
         list={list}
         cards={this.props.cards.filter(card => card.status === list)}
         onClickDelete={this.deleteCard}
-        swapCard={this.props.swapCard}
+        swapCard={this.swapCard}
       />
     )
   }
