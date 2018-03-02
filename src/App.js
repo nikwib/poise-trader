@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import Chart from 'react-icons/lib/md/insert-chart';
+import { DragDropContext } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 import './App.css';
 import Board from './components/Board/Board'
 import CreateCard from './components/CreateCard/CreateCard';
@@ -23,5 +25,5 @@ class App extends Component {
     );
   }
 }
-
-export default App;
+// Make App and its components part of the Drag and drop context.
+export default DragDropContext(HTML5Backend)(App);

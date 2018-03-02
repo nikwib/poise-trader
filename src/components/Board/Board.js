@@ -1,17 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+// import { DragDropContext } from 'react-dnd';
+// import HTML5Backend from 'react-dnd-html5-backend';
 import { baseUrl } from './../../config';
-import { storeCards } from './../../actions';
-import { List } from '../List/List';
+import { storeCards, swapCard } from './../../actions';
+import List from '../List/List';
 import './Board.css';
 
 class Board extends Component {
 
-  fetchCards = () =>  {
+
+  fetchCards = () => {
     fetch(baseUrl + '/cards')
       .then(response => response.json())
       .then(cards => {
-        console.log('Fetched Cards: ',cards);
+        console.log('Fetched Cards: ', cards);
         this.props.storeCards(cards)
       })
   }
@@ -20,34 +23,29 @@ class Board extends Component {
     fetch((baseUrl + '/cards/' + card._id), { method: 'DELETE' })
       .then(this.fetchCards);
   }
+
   componentDidMount() {
     this.fetchCards();
+  }
+
+  renderList = (list) => {
+    return (
+      <List
+        key={list}
+        list={list}
+        cards={this.props.cards.filter(card => card.status === list)}
+        onClickDelete={this.deleteCard}
+        swapCard={this.props.swapCard}
+      />
+    )
   }
 
   render() {
     return (
       <div className="board">
-        <div>
-          Setup: <List
-            key={'setup'}
-            cards={this.props.cards.filter(card => card.status === 'setup')}
-            onClickDelete={this.deleteCard}
-          />
-        </div>
-        <div>
-          Active: <List
-            key={'active'}
-            cards={this.props.cards.filter(card => card.status === 'active')}
-            onClickDelete={this.deleteCard}
-          />
-        </div>
-        <div>
-          Sold: <List
-            key={'sold'}
-            cards={this.props.cards.filter(card => card.status === 'sold')}
-            onClickDelete={this.deleteCard}
-          />
-        </div>
+        <div> Setup: {this.renderList('setup')} </div>
+        <div> Active: {this.renderList('active')} </div>
+        <div> Sold: {this.renderList('sold')} </div>
       </div>
     );
   }
@@ -61,6 +59,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   // Map your dispatch actions
   storeCards: (cards) => dispatch(storeCards(cards)),
+  swapCard: (data) => dispatch(swapCard(data)),
+
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Board);
