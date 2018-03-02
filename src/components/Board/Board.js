@@ -43,7 +43,7 @@ class Board extends Component {
         body: JSON.stringify(card)
       });
       // console.log(response);
-      if (response.status === 503) this.reverseSwapCard(data, srcStatus);
+      if (response.status !== 200) this.reverseSwapCard(data, srcStatus);
     } catch (err) { this.reverseSwapCard(data, srcStatus) }
   }
 
