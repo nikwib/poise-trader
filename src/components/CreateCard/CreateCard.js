@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import DateTime from 'react-datetime';
+import * as moment from 'moment';
 import { storeCard } from './../../actions'
 import { baseUrl } from './../../config';
 import "./CreateCard.css";
@@ -25,7 +27,6 @@ const input = (title, defaultValue="0", additionalClassNames) => (
 class CreateCard extends Component {
 
   postCard = (card) => {
-    console.log('POST: ', card);
     fetch(baseUrl + '/cards', {
       method: 'POST',
       headers: {
@@ -72,11 +73,35 @@ class CreateCard extends Component {
         {input('Equity','Swedish Match AB')}
         {input('Quantity', '0', 'quantity')}
         {input('Entry Price', '0', 'price')}
-        {input('Entry Date', '2018-01-01', 'date')}
+        {/* {input('Entry Date', '2018-01-01', 'date')} */}
+        <div className="add-card-input date">
+        <label htmlFor="entryDate">Entry Date:</label>
+        <DateTime
+          className="date"
+          id="entryDate"
+          locale='en'
+          defaultValue={moment(Date.now()).format('YYYY/MM/DD HH:mm')}
+          dateFormat='MM/DD/YYYY'
+          timeFormat='hh:mm'
+          ref="entryDate"
+        />
+        </div>
         {input('Strategies', '0', 'strategies')}
         {input('Exit Price', '0', 'price')}
-        {input('Exit Date', '2018-01-02', 'date')}
-        {input('atr', '3', 'atr')}
+        {/* {input('Exit Date', '2018-01-02', 'date')} */}
+        <div className="add-card-input date">
+        <label htmlFor="exitDate">Exit Date:</label>
+        <DateTime
+          className="date"
+          id="exitDate"
+          locale='en'
+          defaultValue={moment(Date.now()).format('YYYY/MM/DD HH:mm')}
+          dateFormat='MM/DD/YYYY'
+          timeFormat='hh:mm'
+          ref="exitDate"
+        />
+        </div>
+        {input('atr', '3', 'atr')}        
         {input('Notes', '3', 'notes')}
         {input('Status', 'setup', 'status')}
         <button>Add Equity</button>

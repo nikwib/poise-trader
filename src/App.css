@@ -23,12 +23,10 @@
   justify-content: space-between;
 }
 .App-title {
-  font-size: 1.5em;
-}
-
-.App-intro {
   font-size: large;
 }
+
+
 .nav-bar {
   display: flex;
   width: 30%;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { DragSource } from 'react-dnd';
+import * as moment from 'moment';
 import { ItemTypes } from '../../constants';
 import './Card.css';
 
@@ -21,7 +22,10 @@ function collect (connect, monitor) {
 const Card = ({ onClickDelete, card, connectDragSource, isDragging }) => connectDragSource(
   <div className="card" style={{ opacity: isDragging ? 0.0 : 1 }}  >
     <button className="delete" onClick={() => onClickDelete(card)}>delete</button>
-    <div className="title"> Card Title: {card.equity}</div>
+    <div className="equity"> {card.equity}</div>
+    <div className="quantity"> {card.quantity}</div>
+    <div className="entry-price"> {card.entryPrice}</div>
+    <div className="entry-date"> {moment(card.entryDate).format("DD-MMM")}</div>
   </div>
 );
 

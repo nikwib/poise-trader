@@ -8,11 +8,10 @@ import './Board.css';
 class Board extends Component {
 
 
-  fetchCards() {
+  fetchCards = () => {
     fetch(baseUrl + '/cards')
       .then(response => response.json())
       .then(cards => {
-        console.log('Fetched Cards: ', cards);
         this.props.storeCards(cards)
       })
   }
@@ -22,7 +21,7 @@ class Board extends Component {
       .then(this.fetchCards);
   }
 
-  reverseSwapCard(data, srcStatus) {
+  reverseSwapCard = (data, srcStatus) => {
     // Reverse redux store update
     data.target.list = srcStatus;
     this.props.swapCard(data);

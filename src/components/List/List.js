@@ -2,7 +2,6 @@ import React from 'react';
 import { DropTarget } from 'react-dnd';
 import Card from '../Card/Card';
 import { ItemTypes } from '../../constants';
-import { swapCard } from '../../actions';
 import './List.css';
 
 const listDropTarget = {
@@ -26,6 +25,8 @@ const listDropTarget = {
 function collect(connect, monitor) {
   return {
     connectDropTarget: connect.dropTarget(),
+    isOver: monitor.isOver()
+
   };
 }
 
@@ -34,8 +35,8 @@ const renderList = (cards, onClickDelete) => cards.map(card => {
 }
 );
 
-const List = ({ cards, onClickDelete, connectDropTarget }) => connectDropTarget(
-  <div className='list'>
+const List = ({ cards, onClickDelete, isOver, connectDropTarget }) => connectDropTarget(
+  <div className='list' style={{ padding: '5px', opacity: isOver ? 0.5 : 1 }}>
     {renderList(cards, onClickDelete)}
   </div>
 );
