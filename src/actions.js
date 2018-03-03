@@ -13,3 +13,8 @@ export const swapCard = (data) => ({
   type: 'SWAP_CARD',
   data,
 });
+
+export const updateCard = (card) => ({
+  type: 'UPDATE_CARD',
+  card,
+});

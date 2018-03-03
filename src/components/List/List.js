@@ -3,6 +3,7 @@ import { DropTarget } from 'react-dnd';
 import Card from '../Card/Card';
 import { ItemTypes } from '../../constants';
 import './List.css';
+import { GridList, GridTile } from 'material-ui/GridList';
 
 const listDropTarget = {
   drop: function (props, monitor) {
@@ -30,15 +31,22 @@ function collect(connect, monitor) {
   };
 }
 
-const renderList = (cards, onClickDelete) => cards.map(card => {
-  return (<Card key={card._id} card={card} onClickDelete={onClickDelete} />);
+const renderList = (cards, onClickDelete, onClickEdit) => cards.map(card => {
+  return (
+    <Card
+      key={card._id}
+      card={card}
+      onClickDelete={onClickDelete}
+      onClickEdit={onClickEdit}
+    />);
 }
 );
 
-const List = ({ cards, onClickDelete, isOver, connectDropTarget }) => connectDropTarget(
+const List = ({ cards, onClickDelete, onClickEdit, isOver, connectDropTarget }) => connectDropTarget(
   <div className='list' style={{ padding: '5px', opacity: isOver ? 0.5 : 1 }}>
-    {renderList(cards, onClickDelete)}
+    {renderList(cards, onClickDelete, onClickEdit)}
   </div>
+
 );
 
 export default DropTarget(ItemTypes.CARD, listDropTarget, collect)(List);

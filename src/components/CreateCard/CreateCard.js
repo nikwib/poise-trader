@@ -5,27 +5,25 @@ import * as moment from 'moment';
 import { storeCard } from './../../actions'
 import { baseUrl } from './../../config';
 import "./CreateCard.css";
+import TextField from 'material-ui/TextField';
+import FlatButton from 'material-ui/FlatButton';
+import DatePicker from 'material-ui/DatePicker';
 
 const camelCase = (str) => {
   str = str[0].toLowerCase() + str.substr(1)
   return str.replace(' ', '');
 }
 
-const input = (title, defaultValue="0", additionalClassNames) => (
-  <div className={`add-card-input ${additionalClassNames}`}>
-    <label htmlFor={camelCase(title)}>{title}:</label>
-    <input
-      id={camelCase(title)}
-      type="text"
-      required
-      defaultValue={defaultValue}
-      ref={camelCase(title)}
-    />
-  </div>
+const input = (title, defaultValue = "0", additionalClassNames) => (
+  <TextField
+    floatingLabelText={title}
+    id={camelCase(title)}
+    defaultValue={defaultValue}
+    ref={camelCase(title)}>
+  </TextField>
 )
 
 class CreateCard extends Component {
-
   postCard = (card) => {
     fetch(baseUrl + '/cards', {
       method: 'POST',
@@ -38,76 +36,45 @@ class CreateCard extends Component {
       .then(response => response.json())
       .then(response => {
         this.props.storeCard(response);
-        console.log('Response after post: ',response);
+        console.log('Response after post: ', response);
       })
       .catch(err => console.log('Error: ', err));
-      // .then(response => { if (response.status === 404) console.log('404 Error'); })
-
-    // this.props.fetchTopics();
   }
 
   submit = (e) => {
     e.preventDefault();
     const card = {
-      equity: this.refs.equity.value,
-      quantity: this.refs.quantity.value,
-      entryPrice: this.refs.entryPrice.value,
-      entryDate: this.refs.entryDate.value,
-      strategies: this.refs.strategies.value,
-      exitPrice: this.refs.exitPrice.value,
-      exitDate: this.refs.exitDate.value,
-      ATR: this.refs.atr.value,
-      notes: this.refs.notes.value,
-      status: this.refs.status.value,
+      equity: this.refs.equity.input.value,
+      quantity: this.refs.quantity.input.value,
+      entryPrice: this.refs.entryPrice.input.value,
+      entryDate: this.refs.entryDate.state.date,
+      strategies: this.refs.strategies.input.value,
+      exitPrice: this.refs.exitPrice.input.value,
+      exitDate: this.refs.exitDate.state.date,
+      ATR: this.refs.atr.input.value,
+      notes: this.refs.notes.input.value,
+      status: this.refs.status.input.value,
     };
+    console.log('Refs', this.refs)
+    console.log('Submit card: ',card)
     this.postCard(card)
   }
 
   render() {
-
-    // console.log('myState: ', this.myState);
     return (
       <form onSubmit={this.submit} className="add-card-form">
-        {/* <fieldset> */}
-        {/* <legend>Add card</legend> */}
-        {input('Equity','Swedish Match AB')}
+        {input('Equity', 'Swedish Match AB')}
         {input('Quantity', '0', 'quantity')}
         {input('Entry Price', '0', 'price')}
-        {/* {input('Entry Date', '2018-01-01', 'date')} */}
-        <div className="add-card-input date">
-        <label htmlFor="entryDate">Entry Date:</label>
-        <DateTime
-          className="date"
-          id="entryDate"
-          locale='en'
-          defaultValue={moment(Date.now()).format('YYYY/MM/DD HH:mm')}
-          dateFormat='MM/DD/YYYY'
-          timeFormat='hh:mm'
-          ref="entryDate"
-        />
-        </div>
+        <DatePicker floatingLabelText="Entry Date" ref="entryDate" />
         {input('Strategies', '0', 'strategies')}
         {input('Exit Price', '0', 'price')}
-        {/* {input('Exit Date', '2018-01-02', 'date')} */}
-        <div className="add-card-input date">
-        <label htmlFor="exitDate">Exit Date:</label>
-        <DateTime
-          className="date"
-          id="exitDate"
-          locale='en'
-          defaultValue={moment(Date.now()).format('YYYY/MM/DD HH:mm')}
-          dateFormat='MM/DD/YYYY'
-          timeFormat='hh:mm'
-          ref="exitDate"
-        />
-        </div>
-        {input('atr', '3', 'atr')}        
+        <DatePicker floatingLabelText="Exit Date" ref="exitDate" />
+        {input('atr', '3', 'atr')}
         {input('Notes', '3', 'notes')}
         {input('Status', 'setup', 'status')}
         <button>Add Equity</button>
-        {/* </fieldset> */}
       </form>
-
     )
   }
 }
@@ -123,5 +90,3 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateCard);
-
-// export default CreateCard;

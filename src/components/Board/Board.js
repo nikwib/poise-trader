@@ -3,10 +3,17 @@ import { connect } from 'react-redux';
 import { baseUrl } from './../../config';
 import { storeCards, swapCard } from './../../actions';
 import List from '../List/List';
+import EditCard from '../Card/EditCard';
 import './Board.css';
 
 class Board extends Component {
-
+  
+  constructor(props) {
+    super(props);
+    this.state = {
+      editCard: false,
+    };
+  };
 
   fetchCards = () => {
     fetch(baseUrl + '/cards')
@@ -20,12 +27,14 @@ class Board extends Component {
     fetch((baseUrl + '/cards/' + card._id), { method: 'DELETE' })
       .then(this.fetchCards);
   }
-
-  reverseSwapCard = (data, srcStatus) => {
-    // Reverse redux store update
-    data.target.list = srcStatus;
-    this.props.swapCard(data);
-  }
+  
+  updateCard =  (card) => (
+     fetch((baseUrl + '/cards'), {
+      method: 'PUT',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(card)
+    })
+   )
 
   swapCard = async (data) => {
     const card = data.src.card;
@@ -33,18 +42,21 @@ class Board extends Component {
     card.status = data.target.list;
     this.props.swapCard(data); // Optimistic update of redux store
     try {
-      const response = await fetch((baseUrl + '/cards'), {
-        method: 'PUT',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(card)
-      });
-      // console.log(response);
-      if (response.status !== 200) this.reverseSwapCard(data, srcStatus);
-    } catch (err) { this.reverseSwapCard(data, srcStatus) }
+      const response = await this.updateCard(card)
+      if (response.status !== 200) {
+        // Reverse redux store update
+        data.target.list = srcStatus;
+        this.props.swapCard(data);
+      }
+    } catch (err) {
+      data.target.list = srcStatus;
+      this.props.swapCard(data);
+    }
   }
+
+  renderEditCard = (card) => {
+  this.setState({editCard: true, cardToEdit: card});
+   }
 
   componentDidMount() {
     this.fetchCards();
@@ -57,17 +69,26 @@ class Board extends Component {
         list={list}
         cards={this.props.cards.filter(card => card.status === list)}
         onClickDelete={this.deleteCard}
+        onClickEdit={this.renderEditCard}
         swapCard={this.swapCard}
       />
     )
   }
 
-  render() {
+  render() {    
     return (
       <div className="board">
-        <div> Setup: {this.renderList('setup')} </div>
-        <div> Active: {this.renderList('active')} </div>
-        <div> Sold: {this.renderList('sold')} </div>
+        { this.state.editCard ? 
+        <EditCard
+          cards={this.state.cardToEdit}
+          onClickDelete={this.deleteCard}
+          onClickEdit={this.editCard}
+          swapCard={this.swapCard}
+        /> : null
+        }
+        <div> Setup {this.renderList('setup')} </div>
+        <div> Active {this.renderList('active')} </div>
+        <div> Sold {this.renderList('sold')} </div>
       </div>
     );
   }
