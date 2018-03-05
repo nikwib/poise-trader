@@ -90,7 +90,7 @@ class CreateCard extends Component {
       <div>
         <FlatButton label="Add Trade" onClick={this.handleOpen} labelStyle={{color: darkWhite}}/>
         <Dialog
-          title="Create new trade position"
+          title="New Trade Position"
           actions={actions}
           modal={false}
           open={this.state.open}

@@ -13,13 +13,16 @@ import ActionGrade from 'material-ui/svg-icons/action/grade';
 import ActionAccountBalance from 'material-ui/svg-icons/action/account-balance';
 import ActionAssessment from 'material-ui/svg-icons/action/assessment';
 import ActionDateRange from 'material-ui/svg-icons/action/date-range';
+import Chip from 'material-ui/Chip';
 
 import { ItemTypes } from '../../constants';
 import EditCard from '../Card/EditCard';
 import './Card.css';
 import { baseUrl } from './../../config';
 
-
+function round(value, decimals) {
+  return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
+}
 
 const CardSource = {
   beginDrag(props, monitor) {
@@ -45,24 +48,24 @@ const style = {
 class TradeCard extends Component {
 
   constructor(props) {
-    super(props);    
+    super(props);
     this.state = {
       expanded: false,
       quotes: [],
       quote: {}
-     };
+    };
   };
 
   fetchQuote = async (ticker) => {
-    try{
+    try {
       await fetch(baseUrl + '/quotes/' + ticker)
-      .then(response => response.json())
-      .then(response => {
-        console.log(response)
-        this.setState({ quote: response })
-      })
+        .then(response => response.json())
+        .then(response => {
+          console.log(response)
+          this.setState({ quote: response })
+        })
     } catch (e) {
-      console.log('Error featching quote: ',e);
+      console.log('Error featching quote: ', e);
     }
   };
 
@@ -82,33 +85,40 @@ class TradeCard extends Component {
     this.setState({ expanded: false });
   };
 
+  shortName = () => this.state.quote.price.shortName;
+  marketPrice = () => (this.ready() ? this.state.quote.price.regularMarketPrice : 0);
+  currency = () => this.state.quote.summaryDetail.currency;
+  volume = () => this.state.quote.summaryDetail.volume;
+  previousClose = () => this.state.quote.summaryDetail.previousClose;
+  open = () => this.state.quote.summaryDetail.open;
+  dayHigh = () => this.state.quote.summaryDetail.dayHigh;
+  dayLow = () => this.state.quote.summaryDetail.dayLow;
+  ready = () => (Object.keys(this.state.quote).length > 0);
+  result = (card) => (round(((this.marketPrice() * card.quantity) - (card.entryPrice * card.quantity)), 2) + ' ' + this.currency());
+  value = (card) => (this.ready() ? round((this.marketPrice() * card.quantity), 2) + ' ' + this.currency() : 0);
 
   renderCard = ({ card, onClickDelete, onClickEdit, connectDragSource, isDragging }) => connectDragSource(
     <div style={{ opacity: isDragging ? 0.1 : 1 }} >
       <Paper style={style} zDepth={1}>
         <Card>
-          <CardTitle className="equity" 
-          title={Object.keys(this.state.quote).length > 0 ? this.state.quote.price.shortName : card.equity}
-          subtitle={`Value: ${Object.keys(this.state.quote).length > 0 ? this.state.quote.price.regularMarketPrice  * card.quantity : 0}`} />
+          <CardTitle className="equity"
+            title={this.ready() ? this.shortName() : card.equity}
+            subtitle={`${this.marketPrice()}`} />
           <CardHeader
-          title={card.equity.toUpperCase()} 
-            subtitle={`Result: 
-              ${Object.keys(this.state.quote).length > 0 ? 
-              ((this.state.quote.price.regularMarketPrice * card.quantity) - (card.entryPrice * card.quantity)) 
-              : 0}`}
+            title={card.equity.toUpperCase()}
+            subtitle={`Result: ${this.ready() ? this.result(card) : ''}`}
             actAsExpander={true}
             showExpandableButton={true}
           />
           <Divider />
           <CardText expandable={true}>
             <CardText style={{ textAlign: 'left' }}>
-              <h2>Entry</h2>
-              Price: {Object.keys(this.state.quote).length > 0 ? this.state.quote.price.regularMarketPrice : '0'}
-              Open: {Object.keys(this.state.quote).length > 0 ? this.state.quote.summaryDetail.open : '0'}
-              Day high: {Object.keys(this.state.quote).length > 0 ? this.state.quote.summaryDetail.dayHigh : '0'}
-              Day low: {Object.keys(this.state.quote).length > 0 ? this.state.quote.summaryDetail.dayLow : '0'}
-              Market: {Object.keys(this.state.quote).length > 0 ? this.state.quote.price.marketState : '0'}
-
+              <h2>Days range:</h2>
+              <p>Open: {this.ready() ? this.open() : '0'}</p>
+              <p>Day high: {this.ready() ? this.dayHigh() : '0'}</p>
+              <p>Day low: {this.ready() ? this.dayLow() : '0'}</p>
+              <h2>Result</h2>
+              <p>{this.value(card)}</p>
               <List>
                 <ListItem primaryText={`Num: ${card.quantity}`} leftIcon={<ActionGrade />} />
                 <Divider inset={true} />
@@ -129,9 +139,9 @@ class TradeCard extends Component {
   );
 
 
-  componentDidMount() {    
+  componentDidMount() {
     this.fetchQuote(this.props.card.equity);
-    const realtimer = setInterval((() => this.fetchQuote(this.props.card.equity)), 10000);   
+    const realtimer = setInterval((() => this.fetchQuote(this.props.card.equity)), 10000);
   }
 
   render() {
@@ -142,5 +152,6 @@ class TradeCard extends Component {
     )
   }
 }
+
 
 export default DragSource(ItemTypes.CARD, CardSource, collect)(TradeCard);
