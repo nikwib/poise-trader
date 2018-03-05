@@ -28,7 +28,7 @@ class Board extends Component {
       .then(this.fetchCards);
   }
   
-  updateCard =  (card) => (
+  updateCard = (card) => (
      fetch((baseUrl + '/cards'), {
       method: 'PUT',
       headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },

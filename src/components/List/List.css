@@ -3,6 +3,8 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: #92B5BE;  
+  /* background-color: #92B5BE;   */
+  background: linear-gradient(to bottom, #092A3A, #0B5C73);
+
   box-shadow: 5px 5px 2px 0px rgba(0,0,0,0.1);
 }

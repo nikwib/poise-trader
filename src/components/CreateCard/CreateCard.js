@@ -57,7 +57,7 @@ class CreateCard extends Component {
       exitDate: this.refs.exitDate.state.date,
       ATR: this.refs.atr.input.value,
       notes: this.refs.notes.input.value,
-      status: this.refs.status.input.value,
+      status: 'setup',
     };
     this.postCard(card)
     this.handleClose();
@@ -97,16 +97,15 @@ class CreateCard extends Component {
           onRequestClose={this.handleClose}
         >
           <form className="add-card-form">
-            {input('Equity', 'Swedish Match AB')}
-            {input('Quantity', '0', 'quantity')}
-            {input('Entry Price', '0', 'price')}
+            {input('Equity', '')}
+            {input('Quantity', '', 'quantity')}
+            {input('Entry Price', '', 'price')}
             <DatePicker floatingLabelText="Entry Date" ref="entryDate" />
-            {input('Strategies', '0', 'strategies')}
-            {input('Exit Price', '0', 'price')}
+            {input('Strategies', '', 'strategies')}
+            {input('Exit Price', '', 'price')}
             <DatePicker floatingLabelText="Exit Date" ref="exitDate" />
-            {input('atr', '3', 'atr')}
-            {input('Notes', '3', 'notes')}
-            {input('Status', 'setup', 'status')}
+            {input('atr', '', 'atr')}
+            {input('Notes', '', 'notes')}
           </form>
           Bide your time and wait until your target manifests your desired margin of safety. <br/>
           Never rush your decisions. Chasing an investment means you’re already too late. 
