@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { DragSource } from 'react-dnd';
 import * as moment from 'moment';
-import IconButton from 'material-ui/IconButton';
-import SvgIcon from 'material-ui/SvgIcon';
 import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
 import Toggle from 'material-ui/Toggle';
@@ -66,39 +64,33 @@ class TradeCard extends Component {
     this.setState({ expanded: false });
   };
 
-  renderCard = ({card, onClickDelete, onClickEdit, connectDragSource, isDragging }) => connectDragSource(
+  renderCard = ({ card, onClickDelete, onClickEdit, connectDragSource, isDragging }) => connectDragSource(
     <div style={{ opacity: isDragging ? 0.1 : 1 }} >
       <Paper style={style} zDepth={1}>
         <Card>
+          <CardTitle className="equity" title={card.equity} subtitle={`Value: ${card.entryPrice * card.quantity}`} />
           <CardHeader
             title={card.equity}
             subtitle={`Value: ${card.entryPrice * card.quantity}`}
             actAsExpander={true}
             showExpandableButton={true}
           />
+          <Divider />
           <CardText expandable={true}>
             <CardText style={{ textAlign: 'left' }}>
+                <h2>Entry</h2>
               <List>
                 <ListItem primaryText={`Num: ${card.quantity}`} leftIcon={<ActionGrade />} />
+                <Divider inset={true} />
                 <ListItem primaryText={`Price: ${card.entryPrice}`} leftIcon={<ActionAccountBalance />} />
+                <Divider inset={true} />
                 <ListItem primaryText={`Date: ${moment(card.entryDate).format("DD-MMM")}`} leftIcon={<ActionDateRange />} />
               </List>
-
-              Quantity: {card.quantity}/>
-            Entry price: {card.entryPrice}<br />
-              Entry date: {moment(card.entryDate).format("DD-MMM")}
             </CardText>
             <Divider />
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-            Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-            Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-            <Divider inset={true} />
-
-          <CardActions>
+            <CardActions>
               <FlatButton label="delete" onClick={() => onClickDelete(card)} />
-                <EditCard card={card}/>
-              <FlatButton label="edit" onClick={() => onClickEdit(card)} />
+              <EditCard card={card} />
             </CardActions>
           </CardText>
         </Card>
@@ -116,121 +108,3 @@ class TradeCard extends Component {
 }
 
 export default DragSource(ItemTypes.CARD, CardSource, collect)(TradeCard);
-
-
-
-      // {/* <Card>
-      //   <CardTitle className="equity" title={card.equity} subtitle="Card subtitle" />
-
-      //   <CardText>
-      //     <Toggle
-      //       toggled={this.state.expanded}
-      //       onToggle={this.handleToggle}
-      //       labelPosition="right"
-      //       label="This toggle controls the expanded state of the component."
-      //     />
-      //   </CardText>
-
-      //   <CardText expandable={true}>
-      //     Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-      //     Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-      //     Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-      //     Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-      //   </CardText>
-
-      //   <div className="quantity"> Quantity: {card.quantity}</div>
-      //   <div className="entry-price"> Entry price: {card.entryPrice}</div>
-      //   <div className="entry-date"> Entry date: {moment(card.entryDate).format("DD-MMM")}</div>
-
-      //   <CardActions>
-      //     <div className="buttons">
-      //       <FlatButton label="Delete" />
-      //       <FlatButton label="Edit" />
-      //     </div>
-      //   </CardActions>
-      // </Card> */}
-
-
-// const TradeCard = ({ onClickEdit, onClickDelete, card, connectDragSource, isDragging }) => connectDragSource(
-//   <div className="top" style={styles(isDragging)} >
-//     <Card>
-//       <CardTitle className="equity" title={card.equity} subtitle="Card subtitle" />
-//       <CardText expandable={true}>
-//         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-//         Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-//         Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-//         Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-//       </CardText>
-//       <div className="quantity"> Quantity: {card.quantity}</div>
-//       <div className="entry-price"> Entry price: {card.entryPrice}</div>
-//       <div className="entry-date"> Entry date: {moment(card.entryDate).format("DD-MMM")}</div>
-
-//       <CardActions>
-//         <div className="buttons">
-//           <FlatButton label="Delete" />
-//           <FlatButton label="Edit" />
-//         </div>
-//       </CardActions>
-//     </Card>
-//   </div>
-// );
-
-
-
-
-// const TradeCard = ({ onClickEdit, onClickDelete, card, connectDragSource, isDragging }) => connectDragSource(
-//   <div className="card" style={styles(isDragging)} >
-//     <Card>
-//       <CardHeader>
-//         <div className="card-header">
-//           <div className="equity"> {card.equity}</div>
-//           <div className="buttons">
-//             <IconButton iconClassName="muidocs-icon-custom-github" className="delete" onClick={() => onClickDelete(card)} />
-//             <IconButton iconClassName="muidocs-icon-custom-github" className="edit" onClick={() => onClickEdit(card)} />
-
-//           </div>
-//         </div>
-//       </CardHeader>
-//       <div className="quantity"> {card.quantity}</div>
-//       <div className="entry-price"> {card.entryPrice}</div>
-//       <div className="entry-date"> {moment(card.entryDate).format("DD-MMM")}</div>
-//     </Card>
-//   </div>
-// );
-
-
-// const Card = (props) => (
-//   <div className="card"  style={{opacity: isDragging ? 0.0 : 1}}  >
-//     <button className="delete" onClick={() => props.onClickDelete(props.card)}>delete</button>
-//     <div className="title"> Card Title: {props.card.equity}</div>
-//   </div>
-// )
-
-
-// { <button className="delete" onClick={() => onClickDelete(card)}>delete</button>
-// <button className="edit" onClick={() => onClickEdit(card)}>edit</button> }
-
-
-// const CardExampleExpandable = () => (
-//   <Card>
-//     <CardHeader
-//       title="Without Avatar"
-//       subtitle="Subtitle"
-//       actAsExpander={true}
-//       showExpandableButton={true}
-//     />
-//     <CardActions>
-//       <FlatButton label="Action1" />
-//       <FlatButton label="Action2" />
-//     </CardActions>
-//     <CardText expandable={true}>
-//       Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-//       Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-//       Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-//       Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-//     </CardText>
-//   </Card>
-// );
-
-//          <IconButton iconClassName="muidocs-icon-custom-github" className="delete" onClick={() => onClickDelete(card)} />
- //         <IconButton iconClassName="muidocs-icon-custom-github" className="edit" onClick={() => onClickEdit(card)} />

@@ -2,7 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
 import Popover from 'material-ui/Popover';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
@@ -61,7 +61,7 @@ class EditCard extends React.Component {
   render() {
     return (
       <div>
-        <RaisedButton
+        <FlatButton
           onClick={this.handleClick}
           label="Edit"
         />
