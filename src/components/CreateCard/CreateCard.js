@@ -28,6 +28,14 @@ class CreateCard extends Component {
     open: false,
   };
 
+  updateCard = async (card) => (
+    await fetch((baseUrl + '/cards'), {
+      method: 'PUT',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(card)
+    })
+  )
+
   postCard = (card) => {
     fetch(baseUrl + '/cards', {
       method: 'POST',
@@ -59,7 +67,11 @@ class CreateCard extends Component {
       notes: this.refs.notes.input.value,
       status: 'setup',
     };
-    this.postCard(card)
+    if (this.props.method === 'post') {
+      this.postCard(card)
+    } else {
+      this.updateCard(card)
+    }
     this.handleClose();
   }
 
@@ -88,7 +100,7 @@ class CreateCard extends Component {
 
     return (
       <div>
-        <FlatButton label="Add Trade" onClick={this.handleOpen} labelStyle={{color: darkWhite}}/>
+        <FlatButton label="Add Trade" onClick={this.handleOpen} labelStyle={{ color: darkWhite }} />
         <Dialog
           title="New Trade Position"
           actions={actions}
@@ -107,8 +119,8 @@ class CreateCard extends Component {
             {input('atr', '', 'atr')}
             {input('Notes', '', 'notes')}
           </form>
-          Bide your time and wait until your target manifests your desired margin of safety. <br/>
-          Never rush your decisions. Chasing an investment means you’re already too late. 
+          Bide your time and wait until your target manifests your desired margin of safety. <br />
+          Never rush your decisions. Chasing an investment means you’re already too late.
         </Dialog>
       </div>
 

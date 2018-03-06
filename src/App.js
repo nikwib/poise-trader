@@ -10,6 +10,7 @@ class App extends Component {
     return (
       <div className="App">
         <Header/>
+        <div className="space"></div>
         <Board />
       </div>
     );

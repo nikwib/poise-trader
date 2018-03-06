@@ -6,9 +6,26 @@ import FlatButton from 'material-ui/FlatButton';
 import Popover from 'material-ui/Popover';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
+import DatePicker from 'material-ui/DatePicker';
+import * as moment from 'moment';
+
 import { baseUrl } from './../../config';
 import { updateCard } from './../../actions';
 
+const camelCase = (str) => {
+  str = str[0].toLowerCase() + str.substr(1)
+  return str.replace(' ', '');
+}
+
+const input = (title, defaultValue = "0", additionalClassNames) => (
+  <TextField
+    floatingLabelText={title}
+    type="text"
+    id={camelCase(title)}
+    defaultValue={defaultValue}
+    ref={camelCase(title)}>
+  </TextField>
+)
 
 
 class EditCard extends React.Component {
@@ -38,22 +55,31 @@ class EditCard extends React.Component {
 
   updateCard = async (card) => (
     await fetch((baseUrl + '/cards'), {
-     method: 'PUT',
-     headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-     body: JSON.stringify(card)
-   })
+      method: 'PUT',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(card)
+    })
   )
 
   submit = (e) => {
     e.preventDefault();
- 
+
     const card = {
-      ...this.props.card, 
-      equity: this.refs.equity.input.value
+      ...this.props.card,
+      equity: this.refs.equity.input.value,
+      quantity: this.refs.quantity.input.value,
+      entryPrice: this.refs.entryPrice.input.value,
+      entryDate: this.refs.entryDate.input.value,
+      strategies: this.refs.strategies.input.value,
+      exitPrice: this.refs.exitPrice.input.value,
+      exitDate: this.refs.entryDate.input.value,
+      ATR: this.refs.atr.input.value,
+      notes: this.refs.notes.input.value,
+
     }
     console.log('Refs', this.refs.equity.input.value)
     console.log('Submit card: ', card)
-    
+
     this.updateCard(card);
     this.props.updateCard(card);
   }
@@ -81,6 +107,14 @@ class EditCard extends React.Component {
                 defaultValue={this.props.card.equity}
                 ref="equity"
               />
+              {input('Quantity', this.props.card.quantity, 'quantity')}
+              {input('Entry Price', this.props.card.entryPrice, 'price')}
+              {input('Entry Date', new Date(this.props.card.entryDate), 'date')}
+              {input('Strategies', '', 'strategies')}
+              {input('Exit Price', '', 'price')}
+              {input('Exit Date', new Date(this.props.card.exitDate), 'date')}
+              {input('atr', '', 'atr')}
+              {input('Notes', '', 'notes')}
               <button>Update </button>
             </form>
           </div>
@@ -90,6 +124,9 @@ class EditCard extends React.Component {
   }
 }
 
+
+// entryDate: this.refs.entryDate.input.value,
+//              <DatePicker floatingLabelText="Entry Date" ref="entryDate" value={new Date(this.props.card.entryDate)}/>
 
 const mapStateToProps = (state) => ({
   // Map your state to props

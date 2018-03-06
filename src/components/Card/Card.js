@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { DragSource } from 'react-dnd';
 import * as moment from 'moment';
 import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card';
@@ -17,12 +19,11 @@ import Chip from 'material-ui/Chip';
 
 import { ItemTypes } from '../../constants';
 import EditCard from '../Card/EditCard';
+import CreateCard from '../CreateCard/CreateCard';
+import Graph from './../Graph/Graph';
 import './Card.css';
 import { baseUrl } from './../../config';
-
-function round(value, decimals) {
-  return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
-}
+import { round } from './../../util';
 
 const CardSource = {
   beginDrag(props, monitor) {
@@ -38,9 +39,8 @@ function collect(connect, monitor) {
   };
 }
 
-const style = {
-  width: 250,
-  margin: 10,
+const paperStyle = {
+  width: '100%',
   textAlign: 'center',
   display: 'inline-block',
 };
@@ -55,20 +55,25 @@ class TradeCard extends Component {
       quote: {}
     };
   };
+  
+  componentDidMount() {
+    this.fetchQuote(this.props.card.equity);
+    const realTimer = setInterval((() => this.fetchQuote(this.props.card.equity)), 10000);
+  }
 
   fetchQuote = async (ticker) => {
     try {
       await fetch(baseUrl + '/quotes/' + ticker)
         .then(response => response.json())
         .then(response => {
-          console.log(response)
           this.setState({ quote: response })
         })
     } catch (e) {
-      console.log('Error featching quote: ', e);
+      console.log('Error fetching quote: ', e);
     }
   };
 
+  
   handleExpandChange = (expanded) => {
     this.setState({ expanded: expanded });
   };
@@ -96,14 +101,15 @@ class TradeCard extends Component {
   ready = () => (Object.keys(this.state.quote).length > 0);
   result = (card) => (round(((this.marketPrice() * card.quantity) - (card.entryPrice * card.quantity)), 2) + ' ' + this.currency());
   value = (card) => (this.ready() ? round((this.marketPrice() * card.quantity), 2) + ' ' + this.currency() : 0);
+  change = () => (this.ready()? round((((this.marketPrice()/this.open())-1)*100),2) : 0);
 
   renderCard = ({ card, onClickDelete, onClickEdit, connectDragSource, isDragging }) => connectDragSource(
-    <div style={{ opacity: isDragging ? 0.1 : 1 }} >
-      <Paper style={style} zDepth={1}>
+    <div className='trade-card' style={{ opacity: isDragging ? 0.1 : 1 }} >
+      <Paper style={paperStyle} zDepth={1}>
         <Card>
           <CardTitle className="equity"
             title={this.ready() ? this.shortName() : card.equity}
-            subtitle={`${this.marketPrice()}`} />
+            subtitle={`${this.marketPrice()}  ${this.change()} %`} />
           <CardHeader
             title={card.equity.toUpperCase()}
             subtitle={`Result: ${this.ready() ? this.result(card) : ''}`}
@@ -125,6 +131,7 @@ class TradeCard extends Component {
                 <ListItem primaryText={`Price: ${card.entryPrice}`} leftIcon={<ActionAccountBalance />} />
                 <Divider inset={true} />
                 <ListItem primaryText={`Date: ${moment(card.entryDate).format("DD-MMM")}`} leftIcon={<ActionDateRange />} />
+                <Graph/>
               </List>
             </CardText>
             <Divider />
@@ -138,13 +145,8 @@ class TradeCard extends Component {
     </div>
   );
 
-
-  componentDidMount() {
-    this.fetchQuote(this.props.card.equity);
-    const realtimer = setInterval((() => this.fetchQuote(this.props.card.equity)), 10000);
-  }
-
   render() {
+    console.log(this.props);
     return (
       <div>
         {this.renderCard(this.props)}
@@ -153,5 +155,14 @@ class TradeCard extends Component {
   }
 }
 
+const mapStateToProps = (state) => ({
+  // Map your state to props
+});
 
-export default DragSource(ItemTypes.CARD, CardSource, collect)(TradeCard);
+const mapDispatchToProps = (dispatch) => ({
+  // Map your dispatch actions
+});
+
+export default compose(DragSource(ItemTypes.CARD, CardSource, collect), connect(mapStateToProps, mapDispatchToProps)) (TradeCard);
+
+// export default DragSource(ItemTypes.CARD, CardSource, collect)(TradeCard);

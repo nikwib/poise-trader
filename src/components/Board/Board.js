@@ -7,7 +7,7 @@ import EditCard from '../Card/EditCard';
 import './Board.css';
 
 class Board extends Component {
-  
+
   constructor(props) {
     super(props);
     this.state = {
@@ -27,14 +27,14 @@ class Board extends Component {
     fetch((baseUrl + '/cards/' + card._id), { method: 'DELETE' })
       .then(this.fetchCards);
   }
-  
+
   updateCard = (card) => (
-     fetch((baseUrl + '/cards'), {
+    fetch((baseUrl + '/cards'), {
       method: 'PUT',
       headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
       body: JSON.stringify(card)
     })
-   )
+  )
 
   swapCard = async (data) => {
     const card = data.src.card;
@@ -55,8 +55,8 @@ class Board extends Component {
   }
 
   renderEditCard = (card) => {
-  this.setState({editCard: true, cardToEdit: card});
-   }
+    this.setState({ editCard: true, cardToEdit: card });
+  }
 
   componentDidMount() {
     this.fetchCards();
@@ -75,20 +75,12 @@ class Board extends Component {
     )
   }
 
-  render() {    
+  render() {
     return (
       <div className="board">
-        { this.state.editCard ? 
-        <EditCard
-          cards={this.state.cardToEdit}
-          onClickDelete={this.deleteCard}
-          onClickEdit={this.editCard}
-          swapCard={this.swapCard}
-        /> : null
-        }
-        <div> Setup {this.renderList('setup')} </div>
-        <div> Active {this.renderList('active')} </div>
-        <div> Sold {this.renderList('sold')} </div>
+        <div> {this.renderList('setup')} </div>
+        <div> {this.renderList('active')} </div>
+        <div> {this.renderList('sold')} </div>
       </div>
     );
   }

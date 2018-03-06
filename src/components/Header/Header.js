@@ -9,7 +9,7 @@ export const Header = () => {
         <Chart className="App-logo" alt="logo" />
         <div className="App-title">Poise Trade Station</div>
       </div>
-      <div className="create-card"><CreateCard /></div>
+      <div className="create-card"><CreateCard method="post"/></div>
     </header>
   );
 };
