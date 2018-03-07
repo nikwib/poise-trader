@@ -50,11 +50,12 @@ const renderList = (cards, onClickDelete, onClickEdit) => cards.map(card => {
 }
 );
 
-const List = ({ list, cards, onClickDelete, onClickEdit, isOver, connectDropTarget }) => connectDropTarget(
+const List = ({ list, value, cards, onClickDelete, onClickEdit, isOver, connectDropTarget }) => connectDropTarget(
   <div className='list' style={{ padding: '5px', opacity: isOver ? 0.5 : 1 }}>
     <GridTile
       key={list}
       title={list.toUpperCase()}
+      subtitle={value}
       actionIcon={<IconButton><StarBorder color="white" /></IconButton>}
       actionPosition="left"
       titlePosition="top"

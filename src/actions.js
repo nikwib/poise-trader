@@ -18,3 +18,9 @@ export const updateCard = (card) => ({
   type: 'UPDATE_CARD',
   card,
 });
+
+export const storeValue = (card, value) => ({
+  type: 'STORE_VALUE',
+  card,
+  value,
+});

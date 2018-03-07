@@ -5,6 +5,7 @@ import { storeCards, swapCard } from './../../actions';
 import List from '../List/List';
 import EditCard from '../Card/EditCard';
 import './Board.css';
+import { round } from './../../util';
 
 class Board extends Component {
 
@@ -67,6 +68,7 @@ class Board extends Component {
       <List
         key={list}
         list={list}
+        value={round((this.props.cards.filter(card => (card.status === list)).reduce(((acc,card) => acc+card.marketPrice*card.quantity),0)),2)}
         cards={this.props.cards.filter(card => card.status === list)}
         onClickDelete={this.deleteCard}
         onClickEdit={this.renderEditCard}
@@ -88,7 +90,8 @@ class Board extends Component {
 
 const mapStateToProps = (state) => ({
   // Map your state to props
-  cards: state.cards
+  cards: state.cards,
+  activeValue : state.activeValue
 });
 
 const mapDispatchToProps = (dispatch) => ({

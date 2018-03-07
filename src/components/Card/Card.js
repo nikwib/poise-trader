@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { storeValue } from './../../actions';
+
 import { DragSource } from 'react-dnd';
 import * as moment from 'moment';
 import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card';
@@ -16,7 +18,6 @@ import ActionAccountBalance from 'material-ui/svg-icons/action/account-balance';
 import ActionAssessment from 'material-ui/svg-icons/action/assessment';
 import ActionDateRange from 'material-ui/svg-icons/action/date-range';
 import Chip from 'material-ui/Chip';
-
 import { ItemTypes } from '../../constants';
 import EditCard from '../Card/EditCard';
 import CreateCard from '../CreateCard/CreateCard';
@@ -59,15 +60,33 @@ class TradeCard extends Component {
   componentDidMount() {
     this.fetchQuote(this.props.card.equity);
     const realTimer = setInterval((() => this.fetchQuote(this.props.card.equity)), 10000);
+    const realTimer2 = setInterval((() => this.calc(this.props.card, this.marketPrice())), 4000);
+    
   }
+  componentDidUpdate(){
+  }
+
+  calc = (card,value) => {
+    this.props.storeValue(card, value);
+  } 
 
   fetchQuote = async (ticker) => {
     try {
       await fetch(baseUrl + '/quotes/' + ticker)
         .then(response => response.json())
-        .then(response => {
-          this.setState({ quote: response })
-        })
+        .then(response => this.setState({ quote: response }))
+
+    } catch (e) {
+      console.log('Error fetching quote: ', e);
+    }
+  };
+
+  fetchMarketValue = async (ticker) => {
+    try {
+      await fetch(baseUrl + '/quotes/' + ticker)
+        .then(response => response.json())
+        .then(response => this.setState({ marketValue: response.price.regularMarketPrice }))
+
     } catch (e) {
       console.log('Error fetching quote: ', e);
     }
@@ -90,6 +109,7 @@ class TradeCard extends Component {
     this.setState({ expanded: false });
   };
 
+  ready = () => (Object.keys(this.state.quote).length > 0);
   shortName = () => this.state.quote.price.shortName;
   marketPrice = () => (this.ready() ? this.state.quote.price.regularMarketPrice : 0);
   currency = () => this.state.quote.summaryDetail.currency;
@@ -98,9 +118,11 @@ class TradeCard extends Component {
   open = () => this.state.quote.summaryDetail.open;
   dayHigh = () => this.state.quote.summaryDetail.dayHigh;
   dayLow = () => this.state.quote.summaryDetail.dayLow;
-  ready = () => (Object.keys(this.state.quote).length > 0);
   result = (card) => (round(((this.marketPrice() * card.quantity) - (card.entryPrice * card.quantity)), 2) + ' ' + this.currency());
-  value = (card) => (this.ready() ? round((this.marketPrice() * card.quantity), 2) + ' ' + this.currency() : 0);
+  value = (card) => {
+    const value = (this.ready() ? round((this.marketPrice() * card.quantity), 2) : 0);
+    return value;
+  }
   change = () => (this.ready()? round((((this.marketPrice()/this.open())-1)*100),2) : 0);
 
   renderCard = ({ card, onClickDelete, onClickEdit, connectDragSource, isDragging }) => connectDragSource(
@@ -119,7 +141,7 @@ class TradeCard extends Component {
           <Divider />
           <CardText expandable={true}>
             <CardText style={{ textAlign: 'left' }}>
-              <h2>Days range:</h2>
+              <h2>Day range:</h2>
               <p>Open: {this.ready() ? this.open() : '0'}</p>
               <p>Day high: {this.ready() ? this.dayHigh() : '0'}</p>
               <p>Day low: {this.ready() ? this.dayLow() : '0'}</p>
@@ -132,7 +154,7 @@ class TradeCard extends Component {
                 <Divider inset={true} />
                 <ListItem primaryText={`Date: ${moment(card.entryDate).format("DD-MMM")}`} leftIcon={<ActionDateRange />} />
                 <Graph/>
-              </List>
+              </List>              
             </CardText>
             <Divider />
             <CardActions>
@@ -146,7 +168,6 @@ class TradeCard extends Component {
   );
 
   render() {
-    console.log(this.props);
     return (
       <div>
         {this.renderCard(this.props)}
@@ -161,6 +182,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   // Map your dispatch actions
+  storeValue: (card, value) => dispatch(storeValue(card, value))
 });
 
 export default compose(DragSource(ItemTypes.CARD, CardSource, collect), connect(mapStateToProps, mapDispatchToProps)) (TradeCard);
