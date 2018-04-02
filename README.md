@@ -11,12 +11,6 @@ Install dependencies
 npm install
 ```
 
-Start the server using nodemon
-
-```
-nodemon server/index.js
-```
-
 Start the frontend using npm start
 
 ```
