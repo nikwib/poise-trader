@@ -91,7 +91,6 @@ class Board extends Component {
 const mapStateToProps = (state) => ({
   // Map your state to props
   cards: state.cards,
-  activeValue : state.activeValue
 });
 
 const mapDispatchToProps = (dispatch) => ({

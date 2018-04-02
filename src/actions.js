@@ -19,8 +19,3 @@ export const updateCard = (card) => ({
   card,
 });
 
-export const storeValue = (card, value) => ({
-  type: 'STORE_VALUE',
-  card,
-  value,
-});

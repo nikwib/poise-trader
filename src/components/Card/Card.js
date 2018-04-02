@@ -1,8 +1,4 @@
 import React, { Component } from 'react';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
-import { storeValue } from './../../actions';
-
 import { DragSource } from 'react-dnd';
 import * as moment from 'moment';
 import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card';
@@ -10,7 +6,6 @@ import FlatButton from 'material-ui/FlatButton';
 import Toggle from 'material-ui/Toggle';
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
-// import RaisedButton from 'material-ui/RaisedButton';
 import { List, ListItem } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import ActionGrade from 'material-ui/svg-icons/action/grade';
@@ -52,7 +47,6 @@ class TradeCard extends Component {
     super(props);
     this.state = {
       expanded: false,
-      quotes: [],
       quote: {}
     };
   };
@@ -60,15 +54,10 @@ class TradeCard extends Component {
   componentDidMount() {
     this.fetchQuote(this.props.card.equity);
     const realTimer = setInterval((() => this.fetchQuote(this.props.card.equity)), 10000);
-    const realTimer2 = setInterval((() => this.calc(this.props.card, this.marketPrice())), 4000);
     
   }
   componentDidUpdate(){
   }
-
-  calc = (card,value) => {
-    this.props.storeValue(card, value);
-  } 
 
   fetchQuote = async (ticker) => {
     try {
@@ -81,18 +70,6 @@ class TradeCard extends Component {
     }
   };
 
-  fetchMarketValue = async (ticker) => {
-    try {
-      await fetch(baseUrl + '/quotes/' + ticker)
-        .then(response => response.json())
-        .then(response => this.setState({ marketValue: response.price.regularMarketPrice }))
-
-    } catch (e) {
-      console.log('Error fetching quote: ', e);
-    }
-  };
-
-  
   handleExpandChange = (expanded) => {
     this.setState({ expanded: expanded });
   };
@@ -154,7 +131,7 @@ class TradeCard extends Component {
                 <Divider inset={true} />
                 <ListItem primaryText={`Date: ${moment(card.entryDate).format("DD-MMM")}`} leftIcon={<ActionDateRange />} />
                 <Graph/>
-              </List>              
+              </List>
             </CardText>
             <Divider />
             <CardActions>
@@ -176,15 +153,4 @@ class TradeCard extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  // Map your state to props
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  // Map your dispatch actions
-  storeValue: (card, value) => dispatch(storeValue(card, value))
-});
-
-export default compose(DragSource(ItemTypes.CARD, CardSource, collect), connect(mapStateToProps, mapDispatchToProps)) (TradeCard);
-
-// export default DragSource(ItemTypes.CARD, CardSource, collect)(TradeCard);
+export default DragSource(ItemTypes.CARD, CardSource, collect)(TradeCard);

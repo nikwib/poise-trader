@@ -8,7 +8,6 @@ import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 import DatePicker from 'material-ui/DatePicker';
 import * as moment from 'moment';
-
 import { baseUrl } from './../../config';
 import { updateCard } from './../../actions';
 
@@ -26,7 +25,6 @@ const input = (title, defaultValue = "0", additionalClassNames) => (
     ref={camelCase(title)}>
   </TextField>
 )
-
 
 class EditCard extends React.Component {
 
@@ -123,10 +121,6 @@ class EditCard extends React.Component {
     );
   }
 }
-
-
-// entryDate: this.refs.entryDate.input.value,
-//              <DatePicker floatingLabelText="Entry Date" ref="entryDate" value={new Date(this.props.card.entryDate)}/>
 
 const mapStateToProps = (state) => ({
   // Map your state to props

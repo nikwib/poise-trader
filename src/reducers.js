@@ -29,13 +29,6 @@ const board = (state = initialState, action) => {
           return card;
         })
       };
-    case 'STORE_VALUE':
-      return {
-        ...state, cards: state.cards.map(card => {
-          if (card.status === 'active') card.marketValue = action.value;
-          return card;
-        })
-      };
     default:
       return state;
   }
@@ -43,10 +36,3 @@ const board = (state = initialState, action) => {
 
 export default board;
 
-// return {
-//   ...state, activeValue: state.cards.reduce((acc,card) => {
-//     if (card.status === 'active') {
-//       return acc + card.quantity + action.value;
-//     } else return acc;     
-//   })
-// };

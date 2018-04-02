@@ -70,18 +70,3 @@ const List = ({ list, value, cards, onClickDelete, onClickEdit, isOver, connectD
 );
 
 export default DropTarget(ItemTypes.CARD, listDropTarget, collect)(List);
-
-
-
-
-//    {cards.map(card => (<Card key={card._id} card={card} onClickDelete={props.onClickDelete} />)}
-
-//      onClickDelete={props.onClickDelete}
-// const List = (props) => {
-//   const { key, list, card, onClickDelete, dispatch, connectDropTarget } = props;
-//   return connectDropTarget(
-//     <div className='list'>
-//       {renderList(props)}
-//     </div>
-//   );
-// }
